@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Zap, Menu } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -25,8 +26,8 @@ const Header = () => {
         </nav>
         
         <div className="flex items-center gap-4">
-          <Button variant="outline" className="hidden md:inline-flex">
-            Sign In
+          <Button variant="outline" className="hidden md:inline-flex" asChild>
+            <Link to="/auth/complex">Sign In</Link>
           </Button>
           <Button variant="electric">
             Book Now
