@@ -55,7 +55,7 @@ const BankingDetails = () => {
         title: "Registration Complete!",
         description: "Your account has been set up successfully. Welcome to JeHu EV!",
       });
-      navigate("/");
+      navigate("/dashboard");
     }
   };
 
