@@ -27,7 +27,7 @@ const Header = () => {
         
         <div className="flex items-center gap-4">
           <Button variant="outline" className="hidden md:inline-flex" asChild>
-            <Link to="/auth/complex">Sign In</Link>
+            <Link to="/auth">Sign In</Link>
           </Button>
           <Button variant="electric">
             Book Now
