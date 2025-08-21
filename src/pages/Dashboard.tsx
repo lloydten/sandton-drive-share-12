@@ -6,11 +6,15 @@ import { Slider } from "@/components/ui/slider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Car, Clock, Battery, Users, MapPin, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import complexImage from "@/assets/green-valley-complex.jpg";
+import eCarImage from "@/assets/e-car.jpg";
+import golfCartImage from "@/assets/e-golf-cart.jpg";
+import heroEvImage from "@/assets/hero-ev-rental.jpg";
 
 // Mock data for the complex and cars
 const complexData = {
   name: "Green Valley Residential Complex",
-  image: "/api/placeholder/800/300",
+  image: complexImage,
   location: "Johannesburg, South Africa"
 };
 
@@ -19,7 +23,7 @@ const availableCars = [
     id: 1,
     name: "CitiBug E-Car",
     type: "Small Electric Car",
-    image: "/api/placeholder/400/300",
+    image: eCarImage,
     capacity: "2 Seaters",
     range: "80km",
     pricePerHour: 100,
@@ -31,7 +35,7 @@ const availableCars = [
     id: 2,
     name: "Electric Golf Cart",
     type: "Community Vehicle", 
-    image: "/api/placeholder/400/300",
+    image: golfCartImage,
     capacity: "4-5 Seaters",
     range: "40km",
     pricePerHour: 120,
@@ -43,7 +47,7 @@ const availableCars = [
     id: 3,
     name: "Urban E-Hatchback",
     type: "Compact Electric Car",
-    image: "/api/placeholder/400/300", 
+    image: heroEvImage, 
     capacity: "4 Seaters",
     range: "120km",
     pricePerHour: 150,
