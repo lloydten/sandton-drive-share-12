@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, CreditCard, Shield, CheckCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const BankingDetails = () => {
   const [formData, setFormData] = useState({
@@ -49,13 +50,34 @@ const BankingDetails = () => {
     return v;
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     if (Object.values(formData).every(value => value.trim() !== "")) {
-      toast({
-        title: "Registration Complete!",
-        description: "Your account has been set up successfully. Welcome to JeHu EV!",
-      });
-      navigate("/dashboard");
+      try {
+        // Mark onboarding as complete in user metadata
+        const { error } = await supabase.auth.updateUser({
+          data: {
+            onboarding_completed: true,
+            banking_details_added: true
+          }
+        });
+
+        if (error) {
+          console.error("Error updating user metadata:", error);
+        }
+
+        toast({
+          title: "Registration Complete!",
+          description: "Your account has been set up successfully. Welcome to JeHu EV!",
+        });
+        navigate("/dashboard");
+      } catch (error) {
+        console.error("Error completing onboarding:", error);
+        toast({
+          title: "Error",
+          description: "There was an issue completing your registration. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
   };
 

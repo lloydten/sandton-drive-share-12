@@ -17,13 +17,24 @@ const Authentication = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
+  const checkUserOnboardingStatus = async (userId: string) => {
+    // Check if user has completed onboarding by checking their profile/metadata
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    // Check if user has completed onboarding (you can customize this logic)
+    // For now, we'll check if they have user_metadata indicating completion
+    const hasCompletedOnboarding = user?.user_metadata?.onboarding_completed;
+    
+    return hasCompletedOnboarding;
+  };
+
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
@@ -38,15 +49,25 @@ const Authentication = () => {
           description: "We've sent you a confirmation link to complete your registration.",
         });
       } else {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         });
         
         if (error) throw error;
         
-        // Redirect to complex selection after successful sign in
-        navigate("/auth/complex");
+        // Check if user has completed onboarding
+        if (data.user) {
+          const hasCompletedOnboarding = await checkUserOnboardingStatus(data.user.id);
+          
+          if (hasCompletedOnboarding) {
+            // User has completed onboarding, redirect to dashboard
+            navigate("/dashboard");
+          } else {
+            // New user or incomplete onboarding, redirect to multi-step flow
+            navigate("/auth/complex");
+          }
+        }
       }
     } catch (error: any) {
       toast({
@@ -64,7 +85,9 @@ const Authentication = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/complex`
+          // For Google auth, we'll handle the redirect in a callback
+          // since we can't check onboarding status before the redirect
+          redirectTo: `${window.location.origin}/auth/callback`
         }
       });
       

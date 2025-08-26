@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import Authentication from "./pages/auth/Authentication";
+import AuthCallback from "./pages/auth/AuthCallback";
 import ComplexSelection from "./pages/auth/ComplexSelection";
 import DocumentUpload from "./pages/auth/DocumentUpload";
 import BankingDetails from "./pages/auth/BankingDetails";
@@ -23,6 +24,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/auth" element={<Authentication />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/auth/complex" element={<ComplexSelection />} />
           <Route path="/auth/documents" element={<DocumentUpload />} />
           <Route path="/auth/banking" element={<BankingDetails />} />
