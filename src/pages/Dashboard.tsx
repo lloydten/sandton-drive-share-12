@@ -6,6 +6,7 @@ import { Slider } from "@/components/ui/slider";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Car, Clock, Battery, Users, MapPin, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import DashboardNavbar from "@/components/DashboardNavbar";
 import complexImage from "@/assets/green-valley-complex.jpg";
 import eCarImage from "@/assets/e-car.jpg";
 import golfCartImage from "@/assets/e-golf-cart.jpg";
@@ -85,6 +86,7 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <DashboardNavbar />
       {/* Complex Cover Section */}
       <div className="relative h-64 md:h-80 overflow-hidden">
         <img
