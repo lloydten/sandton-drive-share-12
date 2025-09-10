@@ -1,10 +1,41 @@
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Badge } from "@/components/ui/badge";
 import { Zap, Bell, Settings, LogOut, User, History } from "lucide-react";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import NotificationPanel from "./NotificationPanel";
 
 const DashboardNavbar = () => {
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [hasUnreadNotification, setHasUnreadNotification] = useState(false);
+
+  useEffect(() => {
+    checkForUnreadNotifications();
+  }, []);
+
+  const checkForUnreadNotifications = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('welcome_notification_seen')
+        .eq('user_id', user.id)
+        .single();
+
+      setHasUnreadNotification(!profile?.welcome_notification_seen);
+    } catch (error) {
+      console.error('Error checking notifications:', error);
+    }
+  };
+
+  const handleNotificationRead = () => {
+    setHasUnreadNotification(false);
+  };
   return (
     <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -39,11 +70,29 @@ const DashboardNavbar = () => {
         </div>
 
         {/* Right Side */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 relative">
           {/* Notifications */}
-          <Button variant="ghost" size="icon">
-            <Bell className="w-5 h-5" />
-          </Button>
+          <div className="relative">
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={() => setShowNotifications(!showNotifications)}
+            >
+              <Bell className="w-5 h-5" />
+              {hasUnreadNotification && (
+                <Badge 
+                  variant="destructive" 
+                  className="absolute -top-1 -right-1 w-2 h-2 p-0 rounded-full"
+                />
+              )}
+            </Button>
+            
+            <NotificationPanel
+              isOpen={showNotifications}
+              onClose={() => setShowNotifications(false)}
+              onNotificationRead={handleNotificationRead}
+            />
+          </div>
 
           {/* User Menu */}
           <DropdownMenu>

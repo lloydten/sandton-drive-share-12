@@ -51,6 +51,7 @@ export type Database = {
           phone: string | null
           updated_at: string
           user_id: string
+          welcome_notification_seen: boolean | null
         }
         Insert: {
           apartment_number?: string | null
@@ -61,6 +62,7 @@ export type Database = {
           phone?: string | null
           updated_at?: string
           user_id: string
+          welcome_notification_seen?: boolean | null
         }
         Update: {
           apartment_number?: string | null
@@ -71,6 +73,7 @@ export type Database = {
           phone?: string | null
           updated_at?: string
           user_id?: string
+          welcome_notification_seen?: boolean | null
         }
         Relationships: []
       }
