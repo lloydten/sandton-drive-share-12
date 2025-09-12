@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Zap, Mail, Lock, Chrome } from "lucide-react";
+import { ArrowLeft, Zap, Mail, Lock, Chrome, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
@@ -13,6 +13,8 @@ const Authentication = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -38,7 +40,11 @@ const Authentication = () => {
           email,
           password,
           options: {
-            emailRedirectTo: `${window.location.origin}/auth/complex`
+            emailRedirectTo: `${window.location.origin}/auth/complex`,
+            data: {
+              first_name: firstName,
+              last_name: lastName,
+            }
           }
         });
         
@@ -153,6 +159,41 @@ const Authentication = () => {
           </div>
 
           <form onSubmit={handleEmailAuth} className="space-y-4">
+            {isSignUp && (
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">First Name</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="firstName"
+                      type="text"
+                      placeholder="John"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Last Name</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      id="lastName"
+                      type="text"
+                      placeholder="Doe"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      className="pl-10"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+            
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
