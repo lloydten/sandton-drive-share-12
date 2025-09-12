@@ -176,35 +176,24 @@ const Profile = () => {
 
           <Card>
             <CardHeader>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
                   <User className="w-5 h-5" />
                   Personal Information
                 </CardTitle>
                 {!isEditing ? (
-                  <Button variant="outline" onClick={handleEdit} className="shrink-0">
+                  <Button variant="outline" onClick={handleEdit}>
                     <Edit3 className="w-4 h-4 mr-2" />
-                    <span className="hidden sm:inline">Edit Profile</span>
-                    <span className="sm:hidden">Edit</span>
+                    Edit Profile
                   </Button>
                 ) : (
-                  <div className="flex flex-col sm:flex-row gap-2 sm:gap-2 w-full sm:w-auto">
-                    <Button 
-                      variant="outline" 
-                      onClick={handleCancel}
-                      className="w-full sm:w-auto order-2 sm:order-1"
-                      size="sm"
-                    >
-                      <X className="w-4 h-4 mr-1 sm:mr-2" />
+                  <div className="flex gap-2">
+                    <Button variant="outline" onClick={handleCancel}>
+                      <X className="w-4 h-4 mr-2" />
                       Cancel
                     </Button>
-                    <Button 
-                      onClick={handleSave} 
-                      disabled={saving}
-                      className="w-full sm:w-auto order-1 sm:order-2"
-                      size="sm"
-                    >
-                      <Save className="w-4 h-4 mr-1 sm:mr-2" />
+                    <Button onClick={handleSave} disabled={saving}>
+                      <Save className="w-4 h-4 mr-2" />
                       {saving ? "Saving..." : "Save"}
                     </Button>
                   </div>
