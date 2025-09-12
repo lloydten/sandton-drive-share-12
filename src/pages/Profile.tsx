@@ -13,7 +13,8 @@ import DashboardNavbar from "@/components/DashboardNavbar";
 interface UserProfile {
   id: string;
   user_id: string;
-  full_name: string | null;
+  first_name: string | null;
+  last_name: string | null;
   phone: string | null;
   apartment_number: string | null;
   created_at: string;
@@ -24,7 +25,8 @@ const Profile = () => {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    full_name: "",
+    first_name: "",
+    last_name: "",
     phone: "",
     apartment_number: ""
   });
@@ -58,9 +60,18 @@ const Profile = () => {
       }
 
       if (profileData) {
-        setProfile(profileData);
+        // Handle both old and new schema
+        const firstName = (profileData as any).first_name || null;
+        const lastName = (profileData as any).last_name || null;
+        
+        setProfile({
+          ...profileData,
+          first_name: firstName,
+          last_name: lastName
+        });
         setFormData({
-          full_name: profileData.full_name || "",
+          first_name: firstName || "",
+          last_name: lastName || "",
           phone: profileData.phone || "",
           apartment_number: profileData.apartment_number || ""
         });
@@ -80,7 +91,8 @@ const Profile = () => {
     setIsEditing(false);
     if (profile) {
       setFormData({
-        full_name: profile.full_name || "",
+        first_name: (profile as any).first_name || "",
+        last_name: (profile as any).last_name || "",
         phone: profile.phone || "",
         apartment_number: profile.apartment_number || ""
       });
@@ -96,7 +108,8 @@ const Profile = () => {
       const { error } = await supabase
         .from('profiles')
         .update({
-          full_name: formData.full_name || null,
+          first_name: formData.first_name || null,
+          last_name: formData.last_name || null,
           phone: formData.phone || null,
           apartment_number: formData.apartment_number || null,
           updated_at: new Date().toISOString()
@@ -134,14 +147,16 @@ const Profile = () => {
     }));
   };
 
-  const getInitials = (name: string | null) => {
-    if (!name) return "JD";
-    return name
-      .split(" ")
-      .map(n => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
+  const getInitials = (firstName: string | null, lastName: string | null) => {
+    if (!firstName && !lastName) return "JD";
+    const first = firstName?.charAt(0) || "";
+    const last = lastName?.charAt(0) || "";
+    return (first + last).toUpperCase();
+  };
+
+  const getFullName = (firstName: string | null, lastName: string | null) => {
+    if (!firstName && !lastName) return "Not specified";
+    return [firstName, lastName].filter(Boolean).join(" ");
   };
 
   if (loading) {
@@ -217,12 +232,12 @@ const Profile = () => {
                 <Avatar className="w-20 h-20">
                   <AvatarImage src="" alt="Profile" />
                   <AvatarFallback className="text-lg">
-                    {getInitials(profile?.full_name)}
+                    {getInitials(profile?.first_name, profile?.last_name)}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <h3 className="font-semibold">
-                    {profile?.full_name || "No name set"}
+                    {getFullName(profile?.first_name, profile?.last_name)}
                   </h3>
                   <p className="text-sm text-muted-foreground">
                     Member since {profile ? new Date(profile.created_at).toLocaleDateString() : "N/A"}
@@ -235,18 +250,35 @@ const Profile = () => {
               {/* Profile Details */}
               <div className="grid gap-4">
                 <div className="grid gap-2">
-                  <Label htmlFor="full_name">Full Name</Label>
+                  <Label htmlFor="first_name">First Name</Label>
                   {isEditing ? (
                     <Input
-                      id="full_name"
-                      value={formData.full_name}
-                      onChange={(e) => handleInputChange("full_name", e.target.value)}
-                      placeholder="Enter your full name"
+                      id="first_name"
+                      value={formData.first_name}
+                      onChange={(e) => handleInputChange("first_name", e.target.value)}
+                      placeholder="Enter your first name"
                     />
                   ) : (
                     <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-md">
                       <User className="w-4 h-4 text-muted-foreground" />
-                      <span>{profile?.full_name || "Not specified"}</span>
+                      <span>{profile?.first_name || "Not specified"}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="last_name">Last Name</Label>
+                  {isEditing ? (
+                    <Input
+                      id="last_name"
+                      value={formData.last_name}
+                      onChange={(e) => handleInputChange("last_name", e.target.value)}
+                      placeholder="Enter your last name"
+                    />
+                  ) : (
+                    <div className="flex items-center gap-2 p-3 bg-muted/30 rounded-md">
+                      <User className="w-4 h-4 text-muted-foreground" />
+                      <span>{profile?.last_name || "Not specified"}</span>
                     </div>
                   )}
                 </div>
