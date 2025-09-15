@@ -10,7 +10,7 @@ import DashboardNavbar from "@/components/DashboardNavbar";
 import complexImage from "@/assets/green-valley-complex.jpg";
 import eCarImage from "@/assets/e-car.jpg";
 import golfCartImage from "@/assets/e-golf-cart.jpg";
-import heroEvImage from "@/assets/hero-ev-rental.jpg";
+import electricScooterImage from "@/assets/electric-scooter.jpg";
 
 // Mock data for the complex and cars
 const complexData = {
@@ -46,15 +46,15 @@ const availableCars = [
   },
   {
     id: 3,
-    name: "Urban E-Hatchback",
-    type: "Compact Electric Car",
-    image: heroEvImage, 
-    capacity: "4 Seaters",
-    range: "120km",
-    pricePerHour: 150,
-    features: ["Long range", "Fast charging", "Premium interior"],
-    available: false,
-    battery: 20
+    name: "Urban E-Scooter",
+    type: "Electric Scooter",
+    image: electricScooterImage, 
+    capacity: "1 Rider",
+    range: "60km",
+    pricePerHour: 80,
+    features: ["Lightweight & agile", "Easy parking", "Eco-friendly"],
+    available: true,
+    battery: 75
   }
 ];
 
