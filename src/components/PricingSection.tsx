@@ -1,6 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Clock, Zap, Users, Shield } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
+import { User } from "@supabase/supabase-js";
 
 const pricingFeatures = [
   {
@@ -26,6 +30,31 @@ const pricingFeatures = [
 ];
 
 const PricingSection = () => {
+  const navigate = useNavigate();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        setUser(session?.user ?? null);
+      }
+    );
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleBookingClick = () => {
+    if (user) {
+      navigate("/dashboard");
+    } else {
+      navigate("/auth");
+    }
+  };
+
   return (
     <section id="pricing" className="py-20 bg-background">
       <div className="container mx-auto px-4">
@@ -68,7 +97,7 @@ const PricingSection = () => {
                   <span>Air conditioning</span>
                 </li>
               </ul>
-              <Button variant="electric" className="w-full" size="lg">
+              <Button variant="electric" className="w-full" size="lg" onClick={handleBookingClick}>
                 Book E-Car
               </Button>
             </CardContent>
@@ -105,7 +134,7 @@ const PricingSection = () => {
                   <span>Cargo storage space</span>
                 </li>
               </ul>
-              <Button variant="electric" className="w-full" size="lg">
+              <Button variant="electric" className="w-full" size="lg" onClick={handleBookingClick}>
                 Book Golf Cart
               </Button>
             </CardContent>
