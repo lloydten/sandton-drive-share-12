@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Profile from "./pages/Profile";
+import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFound from "./pages/NotFound";
 import Authentication from "./pages/auth/Authentication";
 import AuthCallback from "./pages/auth/AuthCallback";
@@ -24,6 +25,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/payment-success" element={<PaymentSuccess />} />
           <Route path="/auth" element={<Authentication />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/auth/complex" element={<ComplexSelection />} />

@@ -74,14 +74,40 @@ const Dashboard = () => {
     return selectedCar.pricePerHour * hours[0];
   };
 
-  const handlePayment = () => {
-    toast({
-      title: "Redirecting to Payment",
-      description: "Taking you to Yoco payment gateway...",
-    });
-    // Here you would integrate with Yoco payment gateway
-    // window.location.href = "yoco-payment-url";
-    setIsBookingOpen(false);
+  const handlePayment = async () => {
+    if (!selectedCar) return;
+
+    try {
+      toast({
+        title: "Creating payment session...",
+        description: "Redirecting to Stripe checkout",
+      });
+
+      const { supabase } = await import("@/integrations/supabase/client");
+      
+      const { data, error } = await supabase.functions.invoke('create-payment', {
+        body: {
+          vehicleName: selectedCar.name,
+          hours: hours[0],
+          pricePerHour: selectedCar.pricePerHour,
+          totalAmount: calculateTotal()
+        }
+      });
+
+      if (error) throw error;
+
+      if (data?.url) {
+        window.open(data.url, '_blank');
+        setIsBookingOpen(false);
+      }
+    } catch (error) {
+      console.error('Payment error:', error);
+      toast({
+        title: "Payment Error",
+        description: "Unable to create payment session. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -237,7 +263,7 @@ const Dashboard = () => {
                           size="lg"
                         >
                           <CreditCard className="w-4 h-4 mr-2" />
-                          Pay R{calculateTotal()} with Yoco
+                          Pay R{calculateTotal()} with Stripe
                         </Button>
                       </div>
                     </div>
